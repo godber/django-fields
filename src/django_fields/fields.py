@@ -9,13 +9,27 @@ from django.db import models
 from django.conf import settings
 from django.utils.encoding import smart_str, force_unicode
 
-
 USE_CPICKLE = getattr(settings, 'USE_CPICKLE', False)
 
 if USE_CPICKLE:
     import cPickle as pickle
 else:
     import pickle
+
+# TODO: Only If South App is included
+from south.modelsinspector import add_introspection_rules
+
+add_introspection_rules([], [
+    "^django_fields\.fields\.BaseEncryptedField",
+    "^django_fields\.fields\.EncryptedTextField",
+    "^django_fields\.fields\.EncryptedCharField",
+    "^django_fields\.fields\.EncryptedDateField",
+    "^django_fields\.fields\.EncryptedDateTimeField",
+    "^django_fields\.fields\.EncryptedIntField",
+    "^django_fields\.fields\.EncryptedLongField",
+    "^django_fields\.fields\.EncryptedFloatField",
+    ])
+
 
 class BaseEncryptedField(models.Field):
     '''This code is based on the djangosnippet #1095
